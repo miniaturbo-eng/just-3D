@@ -1,0 +1,15 @@
+{
+  "name": "just3d",
+  "version": "1.0.0",
+  "description": "JUST3D — boutique d'impression 3D avec assistant chat Mistral",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@mistralai/mistralai": "^1.7.1",
+    "express": "^4.21.2"
+  }
+}
