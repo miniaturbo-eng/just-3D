@@ -7,14 +7,14 @@ Site web minimal pour **JUST3D**, entreprise de vente d'impression 3D :
 - La clé `MISTRAL_API_KEY` reste uniquement sur le serveur (jamais exposée au navigateur)
 - Impression 3D personnalisée : contact par email (lien `mailto:` dans le pied de page)
 
-## Installation
+## Configuration (optionnelle)
 
-```bash
-npm install
-cp .env.example .env
-```
+Le site fonctionne **sans aucune clé API**. Dans ce cas :
 
-Renseignez ensuite votre clé dans `.env` :
+- le catalogue de produits et le contact par email sont pleinement opérationnels,
+- l'assistant chat affiche un message de repli invitant à contacter par email.
+
+Pour activer l'assistant intelligent, renseignez la clé dans `.env` :
 
 ```
 MISTRAL_API_KEY=votre_cle_api_mistral

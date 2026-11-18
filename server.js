@@ -9,12 +9,9 @@ const PORT = process.env.PORT || 3000;
 const CONTACT_EMAIL = process.env.CONTACT_EMAIL || "contact@just3d.fr";
 const PRODUCTS_FILE = path.join(__dirname, "data", "products.json");
 
-if (!process.env.MISTRAL_API_KEY) {
-  console.error("Erreur : MISTRAL_API_KEY n'est pas défini. Copiez .env.example vers .env et renseignez votre clé.");
-  process.exit(1);
-}
-
-const mistral = new Mistral({ apiKey: process.env.MISTRAL_API_KEY });
+const mistral = process.env.MISTRAL_API_KEY
+  ? new Mistral({ apiKey: process.env.MISTRAL_API_KEY })
+  : null;
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -33,7 +30,7 @@ async function writeProducts(products) {
 }
 
 app.get("/api/config", (req, res) => {
-  res.json({ contactEmail: CONTACT_EMAIL });
+  res.json({ contactEmail: CONTACT_EMAIL, chatEnabled: Boolean(mistral) });
 });
 
 app.get("/api/products", async (req, res) => {
@@ -62,6 +59,14 @@ app.post("/api/chat", async (req, res) => {
   const message = req.body?.message;
   if (!message || typeof message !== "string") {
     return res.status(400).json({ error: "Message manquant." });
+  }
+  if (!mistral) {
+    return res.json({
+      reply:
+        `L'assistant intelligent est désactivé (aucune clé MISTRAL_API_KEY configurée). ` +
+        `Le catalogue ci-contre reste disponible, et pour toute impression 3D personnalisée, ` +
+        `contactez-nous par email à ${CONTACT_EMAIL}.`,
+    });
   }
   const history = Array.isArray(req.body.history) ? req.body.history.slice(-10) : [];
   const products = await readProducts();

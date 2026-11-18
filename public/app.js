@@ -93,5 +93,13 @@ productForm.addEventListener("submit", async (e) => {
   const cfg = await (await fetch("/api/config")).json();
   contactEmail.textContent = cfg.contactEmail;
   contactEmail.href = `mailto:${cfg.contactEmail}?subject=${encodeURIComponent("Demande d'impression 3D personnalisée")}`;
+  if (cfg.chatEnabled === false) {
+    chatInput.placeholder = "Assistant désactivé — contactez-nous par email";
+    addMsg(
+      "bot",
+      "L'assistant intelligent est désactivé : aucune clé API n'est configurée. " +
+        "Parcourez le catalogue et contactez-nous par email pour toute demande."
+    );
+  }
   loadProducts();
 })();
